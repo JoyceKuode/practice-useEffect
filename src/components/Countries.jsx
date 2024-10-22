@@ -1,12 +1,27 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export const Countries = () => {
   const [countryCode, setCountryCode] = useState("AU")
   const [data, setData] = useState(null)
 
-  //const URL = `https://restcountries.com/v2/alpha/${countryCode}`
+  const URL = `https://restcountries.com/v2/alpha/${countryCode}`
 
-  const handleChange = (e) => {}
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(URL)
+        const result = await response.json();
+        setData(result);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, [countryCode]);
+
+  const handleChange = (e) => {
+    setCountryCode(e.target.value);
+  }
 
   return (
     <section className="light">
@@ -26,7 +41,7 @@ export const Countries = () => {
       {data && (
         <div>
           <h3>{data.name}</h3>
-            <p>Capital: {data.capital}</p>
+          <p>Capital: {data.capital}</p>
         </div>
       )}
     </section>
